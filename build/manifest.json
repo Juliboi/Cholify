@@ -1,0 +1,15 @@
+{
+  "name": "Cholify",
+  "short_name": "Cholify",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#fff",
+  "description": "A health app.",
+  "icons": [
+    {
+      "src": "./cholify-favicon-png.png",
+      "sizes": "1024x1024",
+      "type": "image/png"
+    }
+  ]
+}
