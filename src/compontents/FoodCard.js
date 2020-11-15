@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   Card,
@@ -28,23 +28,38 @@ const useStyles = makeStyles((theme) => ({
 export const FoodCard = ({ title, imgSrc, nutrition }) => {
   const classes = useStyles();
   const { foodState, setFoodState } = useFoodStateValue();
+  const [included, setIncluded] = useState(false);
 
-  const isIncluded = () => {
-    if (foodState.some((food) => food.title === title)) {
-      return true;
+  useEffect(() => {
+    if (
+      foodState.some((food) => {
+        return food.title === title;
+      })
+    ) {
+      console.log('no');
+      setIncluded(true);
     } else {
-      return false;
+      setIncluded(false);
+      console.log('yes');
+    }
+
+    console.log(foodState);
+  }, []);
+
+  const handleInclude = () => {
+    if (!included) {
+      setIncluded(true);
+      setFoodState([...foodState, { title, nutrition, imgSrc, grammage: 0 }]);
+    } else {
+      let index = foodState.findIndex((food) => food.title === title);
+      foodState.splice(index, 1);
+      setIncluded(false);
     }
   };
 
   return (
     <Card className='food-card'>
-      <CardActionArea
-        onClick={() => {
-          !isIncluded() &&
-            setFoodState([...foodState, { title, nutrition, imgSrc }]);
-        }}
-      >
+      <CardActionArea onClick={() => handleInclude()}>
         <CardMedia
           component='img'
           alt='Contemplative Reptile'
@@ -56,15 +71,15 @@ export const FoodCard = ({ title, imgSrc, nutrition }) => {
           <Typography variant='h6' component='h5'>
             {title}
           </Typography>
-          {isIncluded() && <CheckCircleIcon className={classes.checkMark} />}
+          {included && <CheckCircleIcon className={classes.checkMark} />}
         </CardContent>
       </CardActionArea>
       <CardActions>
         <Button size='small' color='primary'>
           Info
         </Button>
-        <Button size='small' color='primary'>
-          Přidat
+        <Button size='small' color='primary' onClick={() => handleInclude()}>
+          {included ? 'Odebrat' : 'Přidat'}
         </Button>
       </CardActions>
     </Card>

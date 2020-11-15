@@ -40,6 +40,7 @@ body {
   position: fixed;
   bottom: 0;
   left: 0;
+  padding-bottom: 1rem;
   box-shadow: 0px 2px 13px 1px rgba(0, 0, 0, 0.217) !important;
 }
 
@@ -107,7 +108,7 @@ body {
 /*! My Profile */
 
 .my-profile {
-  padding-bottom: 2rem;
+  padding-bottom: 3rem;
 }
 
 .my-profile__head {

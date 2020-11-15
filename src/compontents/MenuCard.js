@@ -4,7 +4,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
-import { MyProfileChange } from './MyProfileChange';
+import { GrammageModal } from './GrammageModal';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,7 +50,7 @@ export function MenuCard({ setFoodState, title, category, nutrition, imgSrc }) {
           </Typography>
         </CardContent>
         <div className={classes.controls}>
-          <MyProfileChange />
+          <GrammageModal />
         </div>
       </div>
       <CardMedia className={classes.cover} image={imgSrc} title='' />

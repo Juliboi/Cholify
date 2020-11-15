@@ -20,6 +20,28 @@ export const Menu = () => {
           />
         );
       })}
+      <MenuCard
+        setFoodState={setFoodState}
+        title='Kuřecí Prsa'
+        category='Maso'
+        nutrition={{
+          calories: 165,
+          protein: 31,
+          carbohydrate: 0,
+          sugar: 0,
+          totalFat: 3.6,
+          saturatedFat: 1,
+          monosaturatedFat: 1.2,
+          polysaturatedFat: 0.7,
+          cholesterol: 85,
+          fiber: 0,
+          iron: 1,
+          sodium: 74,
+          calcium: 0,
+          phe: 1.05,
+        }}
+        imgSrc='https://image.freepik.com/free-photo/delicious-roasted-chicken-breast-white-background_1112-6651.jpg'
+      />
     </Container>
   );
 };
