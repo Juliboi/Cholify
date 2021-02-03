@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { BottomNavigation } from '@material-ui/core';
-import { AddBox, Favorite, LocalDining } from '@material-ui/icons';
+import { RoomService, Favorite, LocalDining } from '@material-ui/icons';
 import { BottomNavLink } from '../BottomNavLink';
 
 export const BottomNav = () => {
@@ -16,21 +16,13 @@ export const BottomNav = () => {
       value={activePage}
       onChange={handleChange}
     >
+      <BottomNavLink label='Profil' value='my-profile' icon={<Favorite />} />
       <BottomNavLink
-        label='Můj Profil'
-        value='my-profile'
-        icon={<Favorite />}
-      />
-      <BottomNavLink
-        label='Přidat Recept'
+        label='Recepty'
         value='create-recipe'
-        icon={<AddBox />}
+        icon={<RoomService />}
       />
-      <BottomNavLink
-        label='Moje Recepty'
-        value='my-recipes'
-        icon={<LocalDining />}
-      />
+      <BottomNavLink label='Menu' value='my-recipes' icon={<LocalDining />} />
     </BottomNavigation>
   );
 };

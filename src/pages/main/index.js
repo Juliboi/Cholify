@@ -1,5 +1,15 @@
 import { CreateRecipe } from './CreateRecipe';
-import { MyRecipes } from './MyRecipes';
-import { MyProfile } from './MyProfile';
+import { MenuPage } from './MenuPage';
+import { ProfilePage } from './ProfilePage';
+import { IntroPage } from './IntroPage';
+import { LoginPage } from './LoginPage';
+import { RegisterPage } from './RegisterPage';
 
-export { CreateRecipe, MyRecipes, MyProfile };
+export {
+  CreateRecipe,
+  MenuPage,
+  ProfilePage,
+  IntroPage,
+  LoginPage,
+  RegisterPage,
+};

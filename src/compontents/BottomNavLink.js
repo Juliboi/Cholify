@@ -16,9 +16,7 @@ export const BottomNavLink = ({ label, value, icon }) => {
         className={
           location.pathname === `/${value}` ? 'Mui-selected' : undefined
         }
-        showLabel={
-          location.pathname === `/${value}` ? 'Mui-selected' : undefined
-        }
+        showLabel={location.pathname === `/${value}`}
         label={label}
         value={value}
         icon={icon}

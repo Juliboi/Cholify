@@ -1,16 +1,22 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useFoodStateValue } from '../context/food-state';
+import { setInputFilter } from '../helpers/setInputFilter';
+import { getGrammageUnit } from '../helpers/getGrammageUnit';
+import { useFoodStateHelpers } from '../hooks/useFoodStateHelpers.js';
 import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import InputLabel from '@material-ui/core/InputLabel';
-import Input from '@material-ui/core/Input';
-import FormControl from '@material-ui/core/FormControl';
-import TextField from '@material-ui/core/TextField';
-import Select from '@material-ui/core/Select';
-import InputAdornment from '@material-ui/core/InputAdornment';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  InputLabel,
+  Input,
+  FormControl,
+  TextField,
+  Select,
+  InputAdornment,
+} from '@material-ui/core';
 import clsx from 'clsx';
 
 const useStyles = makeStyles((theme) => ({
@@ -25,51 +31,72 @@ const useStyles = makeStyles((theme) => ({
   marginTop: {
     marginTop: '2rem',
   },
+  marginRight: {
+    marginRight: '0.5rem',
+  },
 }));
 
-export function GrammageModal() {
+export function GrammageModal({ title, content }) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [grammage, setGrammage] = useState('');
   const [grammageUnit, setGrammageUnit] = useState('Gramy');
 
-  const inputValue = useRef();
+  const { setFoodState } = useFoodStateValue();
+  const { getAvailableFood, getAvailableFoodIndex } = useFoodStateHelpers(
+    title
+  );
 
-  const handleChange = (event) => {
-    setGrammageUnit(event.target.value || '');
-    console.log(event.target.value);
-  };
-
-  const handleClickOpen = () => {
-    setOpen(true);
+  const getGrammageStateValue = () => {
+    return getAvailableFood().grammage.value;
   };
 
   const handleClose = () => {
     setOpen(false);
   };
 
-  const getGrammageUnit = () => {
-    return grammageUnit === 'Kilogramy'
-      ? 'Kg'
-      : grammageUnit === 'Gramy'
-      ? 'g'
-      : grammageUnit === 'Kus'
-      ? 'ks'
-      : '';
+  const setGrammageState = () => {
+    setFoodState((prevState) => {
+      return prevState.map((food, index) => {
+        if (index === getAvailableFoodIndex()) {
+          return {
+            ...prevState[index],
+            grammage: {
+              ...prevState[index].grammage,
+              value: Number(grammage),
+              unit: getGrammageUnit(grammageUnit),
+            },
+          };
+        } else {
+          return food;
+        }
+      });
+    });
+
+    handleClose();
   };
+
+  useEffect(() => {
+    getGrammageStateValue() !== 0 && setGrammage(getGrammageStateValue());
+  }, []);
 
   return (
     <div>
-      <Button variant='contained' color='primary' onClick={handleClickOpen}>
-        Upravit
+      <Button
+        className={classes.marginRight}
+        variant='contained'
+        color='primary'
+        onClick={() => setOpen(true)}
+      >
+        {content}
       </Button>
       <Dialog
         disableBackdropClick
         disableEscapeKeyDown
         open={open}
-        onClose={handleClose}
+        onClose={() => setOpen(false)}
       >
-        <DialogTitle>Gramáž</DialogTitle>
+        <DialogTitle>{title}</DialogTitle>
         <DialogContent>
           <form className={classes.container}>
             <FormControl className={classes.formControl}>
@@ -77,7 +104,7 @@ export function GrammageModal() {
               <Select
                 native
                 value={grammageUnit}
-                onChange={handleChange}
+                onChange={(e) => setGrammageUnit(e.target.value || '')}
                 input={<Input id='demo-dialog-native' />}
               >
                 <option value='Kilogramy'>Kilogramy</option>
@@ -86,14 +113,24 @@ export function GrammageModal() {
               </Select>
             </FormControl>
             <TextField
-              onChange={(e) => setGrammage(e.target.value)}
+              onClick={() =>
+                setInputFilter(
+                  document.getElementById('outlined-start-adornment'),
+                  function (value) {
+                    return /^-?\d*$/.test(value);
+                  }
+                )
+              }
+              onInput={(e) => {
+                setGrammage(e.target.value);
+              }}
               label='With normal TextField'
               id='outlined-start-adornment'
               className={clsx(classes.marginTop, classes.textField)}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position='start'>
-                    {getGrammageUnit()}
+                    {getGrammageUnit(grammageUnit)}
                   </InputAdornment>
                 ),
               }}
@@ -103,10 +140,10 @@ export function GrammageModal() {
           </form>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color='primary'>
+          <Button onClick={() => setOpen(false)} color='primary'>
             Cancel
           </Button>
-          <Button onClick={handleClose} color='primary'>
+          <Button onClick={setGrammageState} color='primary'>
             Ok
           </Button>
         </DialogActions>

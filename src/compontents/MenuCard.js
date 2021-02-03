@@ -1,17 +1,18 @@
 import React from 'react';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  Button,
+} from '@material-ui/core';
 import { GrammageModal } from './GrammageModal';
+import { useManageFoodState } from '../hooks/useManageFoodState.js';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import TuneIcon from '@material-ui/icons/Tune';
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginBottom: '1.5rem',
-  },
   details: {
     display: 'flex',
     flexDirection: 'column',
@@ -21,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
   },
   cover: {
     width: 151,
+    backgroundSize: 'contain',
   },
   controls: {
     display: 'flex',
@@ -34,23 +36,33 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function MenuCard({ setFoodState, title, category, nutrition, imgSrc }) {
+export function MenuCard({ title, category, grammage, imgSrc }) {
   const classes = useStyles();
-  const theme = useTheme();
+  const { removeFoodFromState } = useManageFoodState(title);
 
   return (
-    <Card className={classes.root}>
+    <Card className='menu-card'>
       <div className={classes.details}>
         <CardContent className={classes.content}>
           <Typography component='h6' variant='h6'>
             {title}
+          </Typography>
+          <Typography className='grammage-text' component='h6' variant='h6'>
+            {`${grammage.value} ${grammage.unit}`}
           </Typography>
           <Typography variant='subtitle1' color='textSecondary'>
             {category}
           </Typography>
         </CardContent>
         <div className={classes.controls}>
-          <GrammageModal />
+          <GrammageModal title={title} content={<TuneIcon />} />
+          <Button
+            variant='contained'
+            color='secondary'
+            onClick={removeFoodFromState}
+          >
+            <DeleteForeverIcon />
+          </Button>
         </div>
       </div>
       <CardMedia className={classes.cover} image={imgSrc} title='' />

@@ -1,31 +1,18 @@
-import React from 'react';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import React, { useState, useEffect } from 'react';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from '@material-ui/core';
 import { useFoodStateValue } from '../context/food-state';
-
-const StyledTableCell = withStyles((theme) => ({
-  head: {
-    backgroundColor: '#43a047',
-    color: theme.palette.common.white,
-  },
-  body: {
-    fontSize: 14,
-  },
-}))(TableCell);
-
-const StyledTableRow = withStyles((theme) => ({
-  root: {
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.action.hover,
-    },
-  },
-}))(TableRow);
+import { createTableData } from '../helpers/createTableData';
+import { useFoodStateHelpers } from '../hooks/useFoodStateHelpers';
+import { ALL_NUTRIENTS } from '../constants/nutrients';
+import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
   table: {
@@ -51,64 +38,42 @@ const useStyles = makeStyles({
 
 export const NutritionTable = () => {
   const classes = useStyles();
+  const [nutrientState, setNutrientState] = useState([]);
 
-  const { foodState, setFoodState } = useFoodStateValue();
+  const { foodState } = useFoodStateValue();
+  const { calculateFoodValue } = useFoodStateHelpers();
 
-  //! Helpers
+  useEffect(() => {
+    const nutritionTableData = ALL_NUTRIENTS.map(({ title, name, unit }) =>
+      createTableData(title, calculateFoodValue(name), unit)
+    );
 
-  function createData(title, myData) {
-    return { title, myData };
-  }
-
-  const calculateValue = (nutritionType) => {
-    let totalValue = 0;
-    if (foodState.length > 0) {
-      foodState.forEach(({ nutrition }) => {
-        totalValue = totalValue + nutrition[nutritionType];
-      });
-
-      return totalValue.toFixed(2);
-    }
-  };
-
-  const rows = [
-    createData('Kalorie', calculateValue('calories')),
-    createData('Proteiny', calculateValue('protein')),
-    createData('Sacharidy', calculateValue('carbohydrate')),
-    createData('Cukry', calculateValue('sugar')),
-    createData('Celkové Tuky', calculateValue('totalFat')),
-    createData('Nasycené Mastné Kyseliny', calculateValue('saturatedFat')),
-    createData('Trans Mastné Kyseliny', calculateValue('monosaturatedFat')),
-    createData('Polynenasycené', calculateValue('polysaturatedFat')),
-    createData('Cholesterol', calculateValue('cholesterol')),
-    createData('Vláknina', calculateValue('fiber')),
-    createData('Železo', calculateValue('iron')),
-    createData('Sůl', calculateValue('sodium')),
-    createData('Vápník', calculateValue('calcium')),
-    createData('PHE', calculateValue('phe')),
-  ];
+    setNutrientState(nutritionTableData);
+  }, []);
 
   return (
-    <TableContainer className={classes.paddingVertical} component={Paper}>
+    <TableContainer className='table' component={Paper}>
       <Table className={classes.table} aria-label='customized table'>
-        <TableHead>
+        <TableHead className='table__head'>
           <TableRow>
-            <StyledTableCell className={classes.upperCase} align='left'>
+            <TableCell className={classes.upperCase} align='left'>
               Moje Živiny
-            </StyledTableCell>
-            <StyledTableCell align='right'></StyledTableCell>
-            <StyledTableCell align='right'></StyledTableCell>
+            </TableCell>
+            <TableCell align='right'></TableCell>
+            <TableCell align='right'></TableCell>
+            <TableCell align='right'></TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <StyledTableRow key={row.name}>
-              <StyledTableCell component='th' scope='row'>
+        <TableBody className='table__body'>
+          {nutrientState.map((row) => (
+            <TableRow key={row.title}>
+              <TableCell component='th' scope='row'>
                 {row.title}
-              </StyledTableCell>
-              <StyledTableCell align='right'></StyledTableCell>
-              <StyledTableCell align='right'>{row.myData}</StyledTableCell>
-            </StyledTableRow>
+              </TableCell>
+              <TableCell align='right'></TableCell>
+              <TableCell align='right'>{row.value}</TableCell>
+              <TableCell align='right'>{row.secondaryValue}</TableCell>
+            </TableRow>
           ))}
         </TableBody>
       </Table>

@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function BadgeAvatars() {
+export function BadgeAvatar() {
   const classes = useStyles();
 
   return (

@@ -1,109 +1,52 @@
-import React, { useEffect } from 'react';
-import SwipeableViews from 'react-swipeable-views';
-import { AppBar, Tabs, Tab, Zoom, Fab, Container } from '@material-ui/core';
-import { FoodPage } from './FoodPage';
-import { Menu } from './Menu';
-import { Nutrition } from './Nutrition';
-import { TabPanel } from '../../compontents/TabPanel';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { green } from '@material-ui/core/colors';
-import { Fastfood } from '@material-ui/icons';
+import React, { useState, useEffect } from 'react';
+import { AppBar, Tabs, Tab, Container } from '@material-ui/core';
+import { FoodPage, Menu, RecipeNutrition } from '../';
+import { TabPanel, CreateRecipeModal } from '../../compontents';
+import { a11yProps } from '../../helpers';
 import { useFoodStateValue } from '../../context/food-state';
+import { FABS } from '../../constants/fabs';
 
-function a11yProps(index) {
-  return {
-    id: `action-tab-${index}`,
-    'aria-controls': `action-tabpanel-${index}`,
-  };
-}
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    backgroundColor: theme.palette.background.paper,
-    width: 500,
-    position: 'relative',
-    minHeight: 200,
-  },
-  fab: {
-    position: 'fixed',
-    bottom: theme.spacing(13),
-    right: theme.spacing(4),
-  },
-  fabGreen: {
-    color: theme.palette.common.white,
-    backgroundColor: green[500],
-    '&:hover': {
-      backgroundColor: green[600],
-    },
-  },
-}));
-
-export function CreateRecipe() {
-  const classes = useStyles();
-  const theme = useTheme();
-  const [value, setValue] = React.useState(0);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
-  const handleChangeIndex = (index) => {
-    setValue(index);
-  };
-
-  const transitionDuration = {
-    enter: theme.transitions.duration.enteringScreen,
-    exit: theme.transitions.duration.leavingScreen,
-  };
-
-  const fabs = [
-    {
-      color: 'primary',
-      className: classes.fab,
-      icon: <Fastfood />,
-      label: 'Nutrition',
-    },
-    {
-      color: 'primary',
-      className: classes.fab,
-      icon: <Fastfood />,
-      label: 'Nutrition',
-    },
-    {
-      color: 'primary',
-      className: classes.fab,
-      icon: <Fastfood />,
-      label: 'Nutrition',
-    },
-  ];
-
+export function CreateRecipe({ header }) {
+  const [value, setValue] = useState(0);
+  const [isPassedHeader, setIsPassedHeader] = useState(false);
   const { foodState, setFoodState } = useFoodStateValue();
 
+  const handleHeaderScroll = () => {
+    const scrollDistance = window.scrollY;
+    const headerHeight = header.current.offsetHeight;
+
+    scrollDistance >= headerHeight
+      ? setIsPassedHeader(true)
+      : setIsPassedHeader(false);
+  };
+
   useEffect(() => {
-    console.log(foodState);
-  }, [foodState]);
+    window.addEventListener('scroll', handleHeaderScroll);
+    console.log('foodState', JSON.stringify(foodState));
+    return () => {
+      window.removeEventListener('scroll', handleHeaderScroll);
+    };
+  }, [isPassedHeader]);
 
   return (
     <Container className='create-recipe'>
-      <AppBar position='static' color='default'>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          indicatorColor='primary'
-          textColor='primary'
-          variant='fullWidth'
-          aria-label='action tabs example'
-        >
-          <Tab label='Jídla' {...a11yProps(0)} />
-          <Tab label='Menu' {...a11yProps(1)} />
-          <Tab label='Živiny' {...a11yProps(2)} />
-        </Tabs>
-      </AppBar>
-      <SwipeableViews
-        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-        index={value}
-        onChangeIndex={handleChangeIndex}
-      >
+      <div className='create-recipe__header'>
+        <AppBar position={isPassedHeader ? 'fixed' : 'static'} color='default'>
+          <Tabs
+            value={value}
+            onChange={(e, index) => setValue(index)}
+            indicatorColor='primary'
+            textColor='primary'
+            variant='fullWidth'
+            aria-label='action tabs example'
+          >
+            <Tab label='Jídla' {...a11yProps(0)} />
+            <Tab label='Recept' {...a11yProps(1)} />
+            <Tab label='Živiny' {...a11yProps(2)} />
+          </Tabs>
+        </AppBar>
+      </div>
+      <div className='create-recipe__content' onScroll={handleHeaderScroll}>
         <TabPanel value={value} index={0}>
           <FoodPage />
         </TabPanel>
@@ -111,29 +54,11 @@ export function CreateRecipe() {
           <Menu />
         </TabPanel>
         <TabPanel value={value} index={2}>
-          <Nutrition foodState={foodState} setFoodState={setFoodState} />
+          <RecipeNutrition foodState={foodState} setFoodState={setFoodState} />
         </TabPanel>
-      </SwipeableViews>
-      {fabs.map((fab, index) => (
-        <Zoom
-          key={index}
-          in={value === index}
-          timeout={transitionDuration}
-          style={{
-            transitionDelay: `${
-              value === index ? transitionDuration.exit : 0
-            }ms`,
-          }}
-          unmountOnExit
-        >
-          <Fab
-            aria-label={fab.label}
-            className={fab.className}
-            color={fab.color}
-          >
-            {fab.icon}
-          </Fab>
-        </Zoom>
+      </div>
+      {FABS.map((fab, index) => (
+        <CreateRecipeModal key={index} fab={fab} value={value} index={index} />
       ))}
     </Container>
   );
