@@ -1,0 +1,151 @@
+//!
+
+//! ------------------------------------------------------
+
+//! ----------------------Připraveno----------------------
+
+//! -------Start
+
+//! ------End
+
+//! 249
+
+//! Append name to total
+
+//! Avokádo
+
+//! Banán
+
+//! Brokolice
+
+//! Bílý jogurt
+
+//! Celer
+
+//! Cuketa
+
+//! Fazole
+
+//! Jahoda
+
+//! Krevety
+
+//! Krůtí maso
+
+//! Květák
+
+//! Ledový salat
+
+//! Losos
+
+//! Macro
+
+//! NOVÉ MAMKA POTRAVINY
+
+//! Ořechy
+
+//! Paprika červená
+
+//! Pstruh
+
+//! Rajče
+
+//! Rukola
+
+//! Rýže jasmínová
+
+//! Sardinky
+
+//! Semínka Slunečnice
+
+//! Tmavé Celozrnné pečivo
+
+//! Tofu
+
+//! Unifiy all modal windows => one modal and pass content as {child} prop
+
+//! add a visual picker of food variants when adding food => redo the whole system? (removing variants in recipe page?)
+
+//! ananas
+
+//! batáty
+
+//! borůvky
+
+//! brambory
+
+//! broskev
+
+//! c
+
+//! check if eating no saturated fat can be bad
+
+//! convert to same unit
+
+//! could have nested categories
+
+//! dýně
+
+//! hruška
+
+//! imgSrc1
+
+//! in smaller values like mcg => dont floor the number
+
+//! invesigate
+
+//! isPassedHeader
+
+//! jablko
+
+//! jedla sůl
+
+//! kukuřice
+
+//! lilek
+
+//! mango
+
+//! meloun
+
+//! mleté 10%
+
+//! mleté 20%
+
+//! no need for variants
+
+//! okurka
+
+//! pass as a food object => then destrucure
+
+//! přední (brisket) => hrudí
+
+//! předělat (pro juliho)
+
+//! přidat obyčejný sardinky
+
+//! real chicken
+
+//! remove it from the structure => defaultUnit in grammageInfo
+
+//! roštěnec (ribeye)
+
+//! tempeh
+
+//! treska
+
+//! zadní (top sirloin)
+
+//! Špenát
+
+//! žebra
+
+//!check if correct for carbs
+
+//!milk shows as 1000g instead od ml
+
+//!panenka
+
+//!redo the unit system
+
+//!write own style on h3
